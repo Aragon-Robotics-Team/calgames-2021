@@ -2,7 +2,7 @@
 
 I have decided on not using a `Constants.java` class like we did last year, it's not scalable, and the file
 gets very messy, very quickly. Another option was the extremely complex system Daniel had. I've decided to go with
-a system that lies somewhere in between those two extremes. In each subsystem, create a static class to store constants.
+a system that lays somewhere in between those two extremes. In each subsystem, create a static class to store constants.
 If multiple classes need to share constants, put the constants in whatever class instantiates those classes.
 
 ## Example
