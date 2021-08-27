@@ -18,25 +18,31 @@ public class Drivetrain extends SubsystemBase {
     public static final int kRightMotorSlave = 2;
   }
 
-  private CANSparkMax leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
-  private CANSparkMax rightMotorMaster = new CANSparkMax(Config.kRightMotorMaster, MotorType.kBrushless);
-  private CANSparkMax leftMotorSlave = new CANSparkMax(Config.kLeftMotorSlave, MotorType.kBrushless);
-  private CANSparkMax rightMotorSlave = new CANSparkMax(Config.kRightMotorSlave, MotorType.kBrushless);
+  private CANSparkMax m_leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
+  private CANSparkMax m_rightMotorMaster = new CANSparkMax(Config.kRightMotorMaster, MotorType.kBrushless);
+  private CANSparkMax m_leftMotorSlave = new CANSparkMax(Config.kLeftMotorSlave, MotorType.kBrushless);
+  private CANSparkMax m_rightMotorSlave = new CANSparkMax(Config.kRightMotorSlave, MotorType.kBrushless);
 
-  private DifferentialDrive drive = new DifferentialDrive(leftMotorMaster, rightMotorMaster);
+  private DifferentialDrive drive = new DifferentialDrive(m_leftMotorMaster, m_rightMotorMaster);
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     // Set masters to inverted
-    leftMotorMaster.setInverted(true);
-    rightMotorMaster.setInverted(true);
+    m_leftMotorMaster.setInverted(true);
+    m_rightMotorMaster.setInverted(true);
     // Enable following
-    leftMotorSlave.follow(leftMotorMaster);
-    rightMotorSlave.follow(rightMotorMaster);
+    m_leftMotorSlave.follow(m_leftMotorMaster);
+    m_rightMotorSlave.follow(m_rightMotorMaster);
   }
 
   /**
    * Other classes can use this method to use the DifferentialDrive instance.
+   */
+
+  /**
+   * Use this to acces the DifferentialDrive instance of the drivetrain.
+   * 
+   * @return the differential drive instance
    */
   public DifferentialDrive getDrive() {
     return drive;
