@@ -36,10 +36,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Other classes can use this method to use the DifferentialDrive instance.
-   */
-
-  /**
    * Use this to acces the DifferentialDrive instance of the drivetrain.
    * 
    * @return the differential drive instance
