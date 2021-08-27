@@ -8,8 +8,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -19,7 +22,17 @@ import edu.wpi.first.wpilibj2.command.Command;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  public static final class Config {
+    public static final int kJoystickPort = 4;
+  }
+
+  // OI
+  private final Joystick m_joystick = new Joystick(Config.kJoystickPort);
+
+  // Subsystems
+  private final Drivetrain m_drivetrain = new Drivetrain();
+  // Commands
+  private final ArcadeDrive m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -39,12 +52,29 @@ public class RobotContainer {
   }
 
   /**
+   * Use this to get the teleop command in the Robot class
+   * 
+   * @return the teleop command
+   */
+  public Command getTeleopCommand() {
+    return m_arcadeDrive;
+  }
+
+  /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
     return null;
+  }
+
+  /**
+   * Use this to access the joystick device
+   * 
+   * @return the Joystick instance
+   */
+  public Joystick getJoystick() {
+    return m_joystick;
   }
 }
