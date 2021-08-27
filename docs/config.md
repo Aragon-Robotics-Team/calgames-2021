@@ -17,4 +17,4 @@ public class MySubsystem extends SubsystemBase {
 }
 ```
 
-Also, use the `kName` naming convention for naming constants (from the google coding style guide and its what wpilib uses).
+Also, use the `kName` naming convention for naming constants (from the google coding style guide and it's what wpilib uses).
