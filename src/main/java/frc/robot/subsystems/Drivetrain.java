@@ -23,7 +23,7 @@ public class Drivetrain extends SubsystemBase {
   private CANSparkMax m_leftMotorSlave = new CANSparkMax(Config.kLeftMotorSlave, MotorType.kBrushless);
   private CANSparkMax m_rightMotorSlave = new CANSparkMax(Config.kRightMotorSlave, MotorType.kBrushless);
 
-  private DifferentialDrive drive = new DifferentialDrive(m_leftMotorMaster, m_rightMotorMaster);
+  private DifferentialDrive m_drive = new DifferentialDrive(m_leftMotorMaster, m_rightMotorMaster);
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
@@ -36,11 +36,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Use this to acces the DifferentialDrive instance of the drivetrain.
+   * Use this to access the DifferentialDrive instance of the drivetrain.
    * 
    * @return the differential drive instance
    */
   public DifferentialDrive getDrive() {
-    return drive;
+    return m_drive;
   }
 }
