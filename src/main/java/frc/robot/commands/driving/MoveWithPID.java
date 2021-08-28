@@ -7,6 +7,7 @@ package frc.robot.commands.driving;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Drivetrain.EncoderCalculationType;
 
 public class MoveWithPID extends CommandBase {
   private final Drivetrain m_drivetrain;
@@ -26,6 +27,7 @@ public class MoveWithPID extends CommandBase {
   @Override
   public void initialize() {
     m_drivetrain.resetEncoder();
+    m_drivetrain.setEncoderState(EncoderCalculationType.Lateral);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
