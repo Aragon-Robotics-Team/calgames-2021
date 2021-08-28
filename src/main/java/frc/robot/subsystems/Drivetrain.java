@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -16,6 +17,16 @@ public class Drivetrain extends SubsystemBase {
     public static final int kRightMotorMaster = 5;
     public static final int kLeftMotorSlave = 1;
     public static final int kRightMotorSlave = 2;
+
+    public static final int kEncoderChanA = 0;
+    public static final int kEncoderChanB = 1;
+
+    public static final double kFeetPerRotation = 0.5;
+    public static final double kPulsesPerRotation = 128.0;
+
+    public static final double kP = 0.5;
+    public static final double kI = 0.5;
+    public static final double kD = 0.1;
   }
 
   private CANSparkMax m_leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
@@ -25,6 +36,8 @@ public class Drivetrain extends SubsystemBase {
 
   private DifferentialDrive m_drive = new DifferentialDrive(m_leftMotorMaster, m_rightMotorMaster);
 
+  private Encoder m_encoder = new Encoder(Config.kEncoderChanA, Config.kEncoderChanB);
+
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     // Set masters to inverted
@@ -33,6 +46,9 @@ public class Drivetrain extends SubsystemBase {
     // Enable following
     m_leftMotorSlave.follow(m_leftMotorMaster);
     m_rightMotorSlave.follow(m_rightMotorMaster);
+
+    // Set encoder distance constant
+    m_encoder.setDistancePerPulse(Config.kFeetPerRotation / Config.kPulsesPerRotation);
   }
 
   /**
@@ -42,5 +58,21 @@ public class Drivetrain extends SubsystemBase {
    */
   public DifferentialDrive getDrive() {
     return m_drive;
+  }
+
+  /**
+   * Calculates the distance driven using the encoder.
+   * 
+   * @return Distance in feet
+   */
+  public double getDistance() {
+    return m_encoder.getDistance();
+  }
+
+  /**
+   * Resets the encoder value
+   */
+  public void resetEncoder() {
+    m_encoder.reset();
   }
 }
