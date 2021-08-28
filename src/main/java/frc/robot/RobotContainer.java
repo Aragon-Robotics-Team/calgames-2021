@@ -7,11 +7,16 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.driving.ArcadeDrive;
+import frc.robot.commands.driving.SimpleFollowPath;
+import frc.robot.commands.driving.SimpleFollowPath.PathSegment;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -33,6 +38,8 @@ public class RobotContainer {
   private final Drivetrain m_drivetrain = new Drivetrain();
   // Commands
   private final ArcadeDrive m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
+  private final SimpleFollowPath m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
+      new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0), new PathSegment(180.0, 5.0))));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -66,7 +73,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return m_simpleFollowPath;
   }
 
   /**

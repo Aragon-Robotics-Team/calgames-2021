@@ -23,7 +23,7 @@ public class SimpleFollowPath extends SequentialCommandGroup {
     public final double lateral;
     public final double angle;
 
-    public PathSegment(double lateral, double angle) {
+    public PathSegment(double angle, double lateral) {
       this.lateral = lateral;
       this.angle = angle;
     }
