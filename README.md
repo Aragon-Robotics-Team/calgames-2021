@@ -2,11 +2,6 @@
 
 Robot code for calgames.
 
-
-
-- [x] Port drivetrain from from frc-2021/county-fair
-- [ ] Implement dead reckoning
-
 Authors:
 
 - Satvik Reddy
