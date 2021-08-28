@@ -47,6 +47,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    m_drivetrain.resetEncoder();
   }
 
   /**
