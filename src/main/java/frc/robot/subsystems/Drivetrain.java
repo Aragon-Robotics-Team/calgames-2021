@@ -21,12 +21,18 @@ public class Drivetrain extends SubsystemBase {
     public static final int kEncoderChanA = 0;
     public static final int kEncoderChanB = 1;
 
-    public static final double kFeetPerRotation = 0.5;
+    public static final double kFeetPerRotation = 0.5 * Math.PI;
     public static final double kPulsesPerRotation = 128.0;
+
+    public static final double kDegsPerRotation = 60.0;
 
     public static final double kP = 0.5;
     public static final double kI = 0.5;
     public static final double kD = 0.1;
+
+    public static final double kPTurn = 0.5;
+    public static final double kITurn = 0.0;
+    public static final double kDTurn = 0.0;
   }
 
   private CANSparkMax m_leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
@@ -38,6 +44,10 @@ public class Drivetrain extends SubsystemBase {
 
   private Encoder m_encoder = new Encoder(Config.kEncoderChanA, Config.kEncoderChanB);
 
+  public enum EncoderCalculationType {
+    Lateral, Turn
+  }
+
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     // Set masters to inverted
@@ -48,7 +58,7 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotorSlave.follow(m_rightMotorMaster);
 
     // Set encoder distance constant
-    m_encoder.setDistancePerPulse(Config.kFeetPerRotation / Config.kPulsesPerRotation);
+    setEncoderState(EncoderCalculationType.Lateral);
   }
 
   /**
@@ -63,10 +73,28 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Calculates the distance driven using the encoder.
    * 
-   * @return Distance in feet
+   * @return Distance in feet/angles depending on the calculation mode set with
+   *         setEncoderState (default is lateral)
    */
   public double getDistance() {
     return m_encoder.getDistance();
+  }
+
+  /**
+   * Sets the encoder calculation mode.
+   * 
+   * @param e Can be either EncoderCalculationType.Lateral or
+   *          EncoderCalculationType.Turn
+   */
+  public void setEncoderState(EncoderCalculationType e) {
+    switch (e) {
+      case Lateral:
+        m_encoder.setDistancePerPulse(Config.kFeetPerRotation / Config.kPulsesPerRotation);
+        break;
+      case Turn:
+        m_encoder.setDistancePerPulse(Config.kDegsPerRotation / Config.kPulsesPerRotation);
+        break;
+    }
   }
 
   /**
