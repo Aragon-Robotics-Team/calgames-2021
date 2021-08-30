@@ -12,9 +12,8 @@ public class ArcadeDrive extends CommandBase {
   public static final class Config {
     public static final int kLeftStickX = 1;
     public static final int kRightStickX = 2;
-
-    public static final double kSpeedMult = 1.0;
-    public static final double kTurnMult = 1.0;
+    public static final double kSpeedMult = 0.5;
+    public static final double kTurnMult = 0.5;
   }
 
   private final Drivetrain m_drivetrain;
@@ -30,15 +29,18 @@ public class ArcadeDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_drivetrain.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     double speed = m_joystick.getRawAxis(Config.kLeftStickX) * Config.kSpeedMult;
     double turn = m_joystick.getRawAxis(Config.kRightStickX) * Config.kTurnMult;
 
     m_drivetrain.getDrive().arcadeDrive(speed, turn);
+    System.out.printf("Encoder ticks: %d\n", m_drivetrain.testGetEnc());
   }
 
   // Called once the command ends or is interrupted.
