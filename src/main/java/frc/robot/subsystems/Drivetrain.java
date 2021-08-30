@@ -103,4 +103,8 @@ public class Drivetrain extends SubsystemBase {
   public void resetEncoder() {
     m_encoder.reset();
   }
+
+  public int testGetEnc() {
+    return m_encoder.get();
+  }
 }
