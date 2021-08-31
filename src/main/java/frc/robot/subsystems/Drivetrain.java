@@ -4,10 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,11 +24,11 @@ public class Drivetrain extends SubsystemBase {
     public static final double kFeetPerRotation = 0.5 * Math.PI;
     public static final double kPulsesPerRotation = 128.0;
 
-    public static final double kDegsPerRotation = 60.0;
+    public static final double kDegsPerTick = 56.0 / Math.PI;
 
     public static final double kP = 0.5;
-    public static final double kI = 0.5;
-    public static final double kD = 0.1;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
 
     public static final double kPTurn = 0.5;
     public static final double kITurn = 0.0;
@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase {
 
   private DifferentialDrive m_drive = new DifferentialDrive(m_leftMotorMaster, m_rightMotorMaster);
 
-  private Encoder m_encoder = new Encoder(Config.kEncoderChanA, Config.kEncoderChanB);
+  private CANEncoder m_encoder = m_rightMotorMaster.getEncoder();
 
   public enum EncoderCalculationType {
     Lateral, Turn
@@ -58,7 +58,8 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotorSlave.follow(m_rightMotorMaster);
 
     // Set encoder distance constant
-    setEncoderState(EncoderCalculationType.Lateral);
+    // m_encoder.setPositionConversionFactor(Config.kFeetPerRotation /
+    // m_encoder.getCountsPerRevolution());
   }
 
   /**
@@ -67,6 +68,8 @@ public class Drivetrain extends SubsystemBase {
    * @return the differential drive instance
    */
   public DifferentialDrive getDrive() {
+    System.out.print("Drivetrain: ");
+    System.out.println(m_encoder.getCountsPerRevolution());
     return m_drive;
   }
 
@@ -77,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
    *         setEncoderState (default is lateral)
    */
   public double getDistance() {
-    return m_encoder.getDistance();
+    return m_encoder.getPosition();
   }
 
   /**
@@ -88,12 +91,12 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setEncoderState(EncoderCalculationType e) {
     switch (e) {
-      case Lateral:
-        m_encoder.setDistancePerPulse(Config.kFeetPerRotation / Config.kPulsesPerRotation);
-        break;
-      case Turn:
-        m_encoder.setDistancePerPulse(Config.kDegsPerRotation / Config.kPulsesPerRotation);
-        break;
+    case Lateral:
+      m_encoder.setPositionConversionFactor(Config.kFeetPerRotation / Config.kPulsesPerRotation);
+      break;
+    case Turn:
+      m_encoder.setPositionConversionFactor(Config.kDegsPerTick);
+      break;
     }
   }
 
@@ -101,10 +104,6 @@ public class Drivetrain extends SubsystemBase {
    * Resets the encoder value
    */
   public void resetEncoder() {
-    m_encoder.reset();
-  }
-
-  public int testGetEnc() {
-    return m_encoder.get();
+    m_encoder.setPosition(0);
   }
 }

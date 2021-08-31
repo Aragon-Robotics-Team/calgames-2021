@@ -39,7 +39,7 @@ public class RobotContainer {
   // Commands
   private final ArcadeDrive m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
   private final SimpleFollowPath m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
-      new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0), new PathSegment(180.0, 5.0))));
+      new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0))));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

@@ -34,7 +34,8 @@ public class MoveWithPID extends CommandBase {
   @Override
   public void execute() {
     double speed = m_pid.calculate(m_drivetrain.getDistance());
-    m_drivetrain.getDrive().tankDrive(speed, speed);
+    m_drivetrain.getDrive().arcadeDrive(speed, 0.0);
+    System.out.println(speed);
   }
 
   // Called once the command ends or is interrupted.

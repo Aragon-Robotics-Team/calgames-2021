@@ -40,7 +40,6 @@ public class ArcadeDrive extends CommandBase {
     double turn = m_joystick.getRawAxis(Config.kRightStickX) * Config.kTurnMult;
 
     m_drivetrain.getDrive().arcadeDrive(speed, turn);
-    System.out.printf("Encoder ticks: %d\n", m_drivetrain.testGetEnc());
   }
 
   // Called once the command ends or is interrupted.

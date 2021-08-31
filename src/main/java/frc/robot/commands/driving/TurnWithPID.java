@@ -46,6 +46,7 @@ public class TurnWithPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_pid.atSetpoint();
+    // return m_pid.atSetpoint();
+    return true;
   }
 }
