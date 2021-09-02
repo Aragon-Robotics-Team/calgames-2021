@@ -25,6 +25,7 @@ public class Drivetrain extends SubsystemBase {
     public static final double kPulsesPerRotation = 128.0;
 
     public static final double kDegsPerTick = 56.0 / Math.PI;
+    public static final double kGearRatio = 1.0 / 10.0;
 
     public static final double kP = 0.5;
     public static final double kI = 0.0;
@@ -60,6 +61,10 @@ public class Drivetrain extends SubsystemBase {
     // Set encoder distance constant
     // m_encoder.setPositionConversionFactor(Config.kFeetPerRotation /
     // m_encoder.getCountsPerRevolution());
+    // m_encoder.setPositionConversionFactor(Config.kGearRatio /
+    // Config.kFeetPerRotation);
+    // m_encoder.setPositionConversionFactor(1.0);
+    setEncoderState(EncoderCalculationType.Lateral);
   }
 
   /**
@@ -68,8 +73,13 @@ public class Drivetrain extends SubsystemBase {
    * @return the differential drive instance
    */
   public DifferentialDrive getDrive() {
-    System.out.print("Drivetrain: ");
-    System.out.println(m_encoder.getCountsPerRevolution());
+    // System.out.print("Drivetrain value: ");
+    // System.out.print(m_encoder.getPosition());
+    // System.out.print(", ");
+    // System.out.print(m_encoder.getPosition() * Config.kGearRatio);
+    // System.out.print(", ");
+    // System.out.println(m_encoder.getPosition() * Config.kGearRatio *
+    // Config.kFeetPerRotation);
     return m_drive;
   }
 
@@ -92,7 +102,7 @@ public class Drivetrain extends SubsystemBase {
   public void setEncoderState(EncoderCalculationType e) {
     switch (e) {
     case Lateral:
-      m_encoder.setPositionConversionFactor(Config.kFeetPerRotation / Config.kPulsesPerRotation);
+      m_encoder.setPositionConversionFactor(Config.kGearRatio * Config.kFeetPerRotation);
       break;
     case Turn:
       m_encoder.setPositionConversionFactor(Config.kDegsPerTick);
@@ -105,5 +115,10 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetEncoder() {
     m_encoder.setPosition(0);
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
   }
 }

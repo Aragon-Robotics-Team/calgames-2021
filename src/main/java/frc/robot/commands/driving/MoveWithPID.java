@@ -6,6 +6,7 @@ package frc.robot.commands.driving;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Drivetrain.EncoderCalculationType;
 
@@ -26,16 +27,17 @@ public class MoveWithPID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drivetrain.resetEncoder();
     m_drivetrain.setEncoderState(EncoderCalculationType.Lateral);
+    m_drivetrain.resetEncoder();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double speed = m_pid.calculate(m_drivetrain.getDistance());
-    m_drivetrain.getDrive().arcadeDrive(speed, 0.0);
-    System.out.println(speed);
+    double rSpeed = MathUtil.clamp(speed, -1.0, 1.0);
+    // m_drivetrain.getDrive().arcadeDrive(rSpeed, 0.0, false);
+    m_drivetrain.getDrive().tankDrive(rSpeed, rSpeed, false);
   }
 
   // Called once the command ends or is interrupted.

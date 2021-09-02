@@ -7,6 +7,7 @@ package frc.robot.commands.driving;
 import java.util.List;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 
@@ -36,7 +37,10 @@ public class SimpleFollowPath extends SequentialCommandGroup {
     // Two commands per segment, one to rotate, one to move laterally
     for (int i = 0; i < segments.size(); i++) {
       PathSegment s = segments.get(i);
-      commands[i * 2] = new TurnWithPID(drivetrain, s.angle);
+      // commands[i * 2] = new TurnWithPID(drivetrain, s.angle);
+      commands[i * 2] = new InstantCommand(() -> {
+        System.out.println("skip");
+      });
       commands[i * 2 + 1] = new MoveWithPID(drivetrain, s.lateral);
     }
 
