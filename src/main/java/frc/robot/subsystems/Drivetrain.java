@@ -59,11 +59,6 @@ public class Drivetrain extends SubsystemBase {
     m_rightMotorSlave.follow(m_rightMotorMaster);
 
     // Set encoder distance constant
-    // m_encoder.setPositionConversionFactor(Config.kFeetPerRotation /
-    // m_encoder.getCountsPerRevolution());
-    // m_encoder.setPositionConversionFactor(Config.kGearRatio /
-    // Config.kFeetPerRotation);
-    // m_encoder.setPositionConversionFactor(1.0);
     setEncoderState(EncoderCalculationType.Lateral);
   }
 
@@ -73,13 +68,6 @@ public class Drivetrain extends SubsystemBase {
    * @return the differential drive instance
    */
   public DifferentialDrive getDrive() {
-    // System.out.print("Drivetrain value: ");
-    // System.out.print(m_encoder.getPosition());
-    // System.out.print(", ");
-    // System.out.print(m_encoder.getPosition() * Config.kGearRatio);
-    // System.out.print(", ");
-    // System.out.println(m_encoder.getPosition() * Config.kGearRatio *
-    // Config.kFeetPerRotation);
     return m_drive;
   }
 
@@ -104,12 +92,12 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setEncoderState(EncoderCalculationType e) {
     switch (e) {
-    case Lateral:
-      m_encoder.setPositionConversionFactor(Config.kGearRatio * Config.kFeetPerRotation);
-      break;
-    case Turn:
-      m_encoder.setPositionConversionFactor(Config.kDegsPerTick);
-      break;
+      case Lateral:
+        m_encoder.setPositionConversionFactor(Config.kGearRatio * Config.kFeetPerRotation);
+        break;
+      case Turn:
+        m_encoder.setPositionConversionFactor(Config.kDegsPerTick);
+        break;
     }
   }
 
@@ -118,10 +106,5 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetEncoder() {
     m_encoder.setPosition(0);
-  }
-
-  @Override
-  public void periodic() {
-    super.periodic();
   }
 }
