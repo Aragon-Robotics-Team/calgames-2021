@@ -4,6 +4,7 @@
 
 package frc.robot.commands.driving;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -12,6 +13,7 @@ import frc.robot.subsystems.Drivetrain.EncoderCalculationType;
 
 public class MoveWithPID extends CommandBase {
   private final Drivetrain m_drivetrain;
+  private double initTime;
   private final PIDController m_pid = new PIDController(Drivetrain.Config.kP, Drivetrain.Config.kI,
       Drivetrain.Config.kD);
 
@@ -29,6 +31,7 @@ public class MoveWithPID extends CommandBase {
   public void initialize() {
     m_drivetrain.setEncoderState(EncoderCalculationType.Lateral);
     m_drivetrain.resetEncoder();
+    // initTime = Timer.getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,7 +39,9 @@ public class MoveWithPID extends CommandBase {
   public void execute() {
     double speed = m_pid.calculate(m_drivetrain.getDistance());
     double rSpeed = MathUtil.clamp(speed, -1.0, 1.0);
+    rSpeed *= -0.5;
     // m_drivetrain.getDrive().arcadeDrive(rSpeed, 0.0, false);
+    // m_drivetrain.getDrive().tankDrive(0.25, 0.25, false);
     m_drivetrain.getDrive().tankDrive(rSpeed, rSpeed, false);
   }
 
@@ -49,6 +54,7 @@ public class MoveWithPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    // return Timer.getFPGATimestamp() - initTime >= 2.0;
     return m_pid.atSetpoint();
   }
 }

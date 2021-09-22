@@ -32,7 +32,7 @@ public class Drivetrain extends SubsystemBase {
     public static final double kD = 0.0;
 
     public static final double kPTurn = 0.5;
-    public static final double kITurn = 0.0;
+    public static final double kITurn = 5e-5;
     public static final double kDTurn = 0.0;
   }
 
@@ -90,7 +90,10 @@ public class Drivetrain extends SubsystemBase {
    *         setEncoderState (default is lateral)
    */
   public double getDistance() {
-    return m_encoder.getPosition();
+    double g = m_encoder.getPosition();
+    System.out.print("Encoder position: ");
+    System.out.println(g);
+    return g;
   }
 
   /**
