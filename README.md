@@ -5,6 +5,6 @@ Robot code for calgames.
 Authors:
 
 - Satvik Reddy
-- More at some point
+- Luke Phillips
 
 Copyright (c) 2021, Aragon Robotics
