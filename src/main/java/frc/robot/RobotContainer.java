@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.driving.ArcadeDrive;
+import frc.robot.commands.driving.DiffDriveIdle;
 import frc.robot.commands.driving.SimpleFollowPath;
 import frc.robot.commands.driving.SimpleFollowPath.PathSegment;
 import frc.robot.subsystems.Drivetrain;
@@ -40,6 +41,7 @@ public class RobotContainer {
   private final ArcadeDrive m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
   private final SimpleFollowPath m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
       new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0))));
+  private final DiffDriveIdle m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -65,7 +67,8 @@ public class RobotContainer {
    * @return the teleop command
    */
   public Command getTeleopCommand() {
-    return m_arcadeDrive;
+    m_drivetrain.setDefaultCommand(m_arcadeDrive);
+    return null;
   }
 
   /**
@@ -74,6 +77,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    m_drivetrain.setDefaultCommand(m_diffDriveIdle);
     return m_simpleFollowPath;
   }
 
