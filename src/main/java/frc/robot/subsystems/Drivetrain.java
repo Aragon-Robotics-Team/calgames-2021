@@ -78,10 +78,7 @@ public class Drivetrain extends SubsystemBase {
    *         setEncoderState (default is lateral)
    */
   public double getDistance() {
-    double g = m_encoder.getPosition();
-    System.out.print("Encoder position: ");
-    System.out.println(g);
-    return g;
+    return m_encoder.getPosition();
   }
 
   /**
