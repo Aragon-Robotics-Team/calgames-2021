@@ -6,9 +6,11 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
@@ -28,8 +30,8 @@ public class Drivetrain extends SubsystemBase {
     public static final double kGearRatio = 1.0 / 10.0;
 
     public static final double kP = 0.5;
-    public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    public static final double kI = 1e-1;
+    public static final double kD = 1e-1;
 
     public static final double kPTurn = 0.5;
     public static final double kITurn = 5e-5;
@@ -57,6 +59,11 @@ public class Drivetrain extends SubsystemBase {
     // Enable following
     m_leftMotorSlave.follow(m_leftMotorMaster);
     m_rightMotorSlave.follow(m_rightMotorMaster);
+    // Set Coast mode
+    m_leftMotorMaster.setIdleMode(IdleMode.kCoast);
+    m_leftMotorSlave.setIdleMode(IdleMode.kCoast);
+    m_rightMotorMaster.setIdleMode(IdleMode.kCoast);
+    m_rightMotorSlave.setIdleMode(IdleMode.kCoast);
 
     // Set encoder distance constant
     setEncoderState(EncoderCalculationType.Lateral);
@@ -69,6 +76,13 @@ public class Drivetrain extends SubsystemBase {
    */
   public DifferentialDrive getDrive() {
     return m_drive;
+  }
+
+  public void setBrake() {
+    m_leftMotorMaster.setIdleMode(IdleMode.kBrake);
+    m_leftMotorSlave.setIdleMode(IdleMode.kBrake);
+    m_rightMotorMaster.setIdleMode(IdleMode.kBrake);
+    m_rightMotorSlave.setIdleMode(IdleMode.kBrake);
   }
 
   /**
@@ -103,5 +117,12 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetEncoder() {
     m_encoder.setPosition(0);
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    SmartDashboard.putNumber("Drivetrain Encoder", getDistance());
   }
 }
