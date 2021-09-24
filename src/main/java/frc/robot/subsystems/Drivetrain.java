@@ -59,11 +59,6 @@ public class Drivetrain extends SubsystemBase {
     // Enable following
     m_leftMotorSlave.follow(m_leftMotorMaster);
     m_rightMotorSlave.follow(m_rightMotorMaster);
-    // Set Coast mode
-    m_leftMotorMaster.setIdleMode(IdleMode.kCoast);
-    m_leftMotorSlave.setIdleMode(IdleMode.kCoast);
-    m_rightMotorMaster.setIdleMode(IdleMode.kCoast);
-    m_rightMotorSlave.setIdleMode(IdleMode.kCoast);
 
     // Set encoder distance constant
     setEncoderState(EncoderCalculationType.Lateral);
@@ -78,11 +73,30 @@ public class Drivetrain extends SubsystemBase {
     return m_drive;
   }
 
-  public void setBrake() {
-    m_leftMotorMaster.setIdleMode(IdleMode.kBrake);
-    m_leftMotorSlave.setIdleMode(IdleMode.kBrake);
-    m_rightMotorMaster.setIdleMode(IdleMode.kBrake);
-    m_rightMotorSlave.setIdleMode(IdleMode.kBrake);
+  /**
+   * Set motors to brake mode.
+   */
+  public void setBrakeMode() {
+    setMotorMode(IdleMode.kBrake);
+  }
+
+  /**
+   * Set motors to coast mode.
+   */
+  public void setCoastMode() {
+    setMotorMode(IdleMode.kCoast);
+  }
+
+  /**
+   * Sets the idle mode on all 4 motors.
+   * 
+   * @param mode either IdleMode.kCoast or kBrake
+   */
+  private void setMotorMode(IdleMode mode) {
+    m_leftMotorMaster.setIdleMode(mode);
+    m_leftMotorSlave.setIdleMode(mode);
+    m_rightMotorMaster.setIdleMode(mode);
+    m_rightMotorSlave.setIdleMode(mode);
   }
 
   /**

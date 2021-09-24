@@ -67,7 +67,9 @@ public class RobotContainer {
    * @return the teleop command
    */
   public Command getTeleopCommand() {
+    m_drivetrain.setCoastMode();
     m_drivetrain.setDefaultCommand(m_arcadeDrive);
+
     return null;
   }
 
@@ -77,7 +79,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    m_drivetrain.setBrakeMode();
     m_drivetrain.setDefaultCommand(m_diffDriveIdle);
+
     return m_simpleFollowPath;
   }
 

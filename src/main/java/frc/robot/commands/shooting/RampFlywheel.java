@@ -10,16 +10,14 @@ import frc.robot.subsystems.shooter.Flywheel;
 
 public class RampFlywheel extends CommandBase {
   private final Flywheel m_flywheel;
-  private final double m_targetVoltage;
-  private final double m_targetTime;
+  private final double m_targetRPM = Flywheel.Config.kTargetRPM;
+  private final double m_targetTime = Flywheel.Config.kRampUpTime;
 
   private SlewRateLimiter m_rateLimit;
 
   /** Creates a new RampFlywheel. */
-  public RampFlywheel(Flywheel flywheel, double targetVoltage, double targetTime) {
+  public RampFlywheel(Flywheel flywheel) {
     m_flywheel = flywheel;
-    m_targetVoltage = targetVoltage;
-    m_targetTime = targetTime;
 
     addRequirements(flywheel);
   }
@@ -33,7 +31,7 @@ public class RampFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_flywheel.setVoltage(m_rateLimit.calculate(m_targetVoltage));
+    m_flywheel.setVoltage(m_rateLimit.calculate(1.0));
   }
 
   // Called once the command ends or is interrupted.
@@ -44,7 +42,6 @@ public class RampFlywheel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // 0.05 voltage tolerance
-    return Math.abs(m_flywheel.getVoltage() - m_targetVoltage) < 0.05;
+    return Math.abs(m_flywheel.getRPM() - m_targetRPM) >= 4000;
   }
 }

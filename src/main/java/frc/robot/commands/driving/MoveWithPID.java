@@ -15,14 +15,14 @@ public class MoveWithPID extends CommandBase {
   private final Drivetrain m_drivetrain;
   private final PIDController m_pid = new PIDController(Drivetrain.Config.kP, Drivetrain.Config.kI,
       Drivetrain.Config.kD);
+  private final double m_setpoint;
 
   /** Creates a new MoveWithPID. */
   public MoveWithPID(Drivetrain drivetrain, double setpoint) {
     m_drivetrain = drivetrain;
 
     addRequirements(drivetrain);
-
-    m_pid.setSetpoint(setpoint);
+    m_setpoint = setpoint;
   }
 
   // Called when the command is initially scheduled.
@@ -30,6 +30,9 @@ public class MoveWithPID extends CommandBase {
   public void initialize() {
     m_drivetrain.setEncoderState(EncoderCalculationType.Lateral);
     m_drivetrain.resetEncoder();
+
+    m_pid.setSetpoint(m_setpoint);
+
     SmartDashboard.putBoolean("PID Running", true);
   }
 
@@ -42,14 +45,15 @@ public class MoveWithPID extends CommandBase {
     // -1.0. So, we'll clamp it then multiply it by 1/2 to curb the speed.
     double rSpeed = MathUtil.clamp(speed, -1.0, 1.0);
     rSpeed *= -0.5;
+
     m_drivetrain.getDrive().tankDrive(rSpeed, rSpeed, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    SmartDashboard.putBoolean("PID Running", false);
     m_drivetrain.getDrive().stopMotor();
+    SmartDashboard.putBoolean("PID Running", false);
   }
 
   // Returns true when the command should end.
