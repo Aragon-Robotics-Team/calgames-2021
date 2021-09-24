@@ -40,7 +40,7 @@ public class RobotContainer {
   // Commands
   private final ArcadeDrive m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
   private final SimpleFollowPath m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
-      new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0))));
+      new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0), new PathSegment(0.0, -5.0))));
   private final DiffDriveIdle m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
 
   /**
