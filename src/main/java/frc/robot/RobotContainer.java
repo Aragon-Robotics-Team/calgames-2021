@@ -7,18 +7,25 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.driving.ArcadeDrive;
 import frc.robot.commands.driving.DiffDriveIdle;
 import frc.robot.commands.driving.SimpleFollowPath;
 import frc.robot.commands.driving.SimpleFollowPath.PathSegment;
+import frc.robot.commands.shooting.ControlHopper;
+import frc.robot.commands.shooting.RampDownFlywheel;
+import frc.robot.commands.shooting.RampFlywheel;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.shooter.Flywheel;
+import frc.robot.subsystems.shooter.Funnel;
+import frc.robot.subsystems.shooter.Tower;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -30,18 +37,32 @@ import frc.robot.subsystems.Drivetrain;
 public class RobotContainer {
   public static final class Config {
     public static final int kJoystickPort = 4;
+
+    // TODO configure buttons
+    public static final int kShootButton = 0;
+    public static final int kShootOffButton = 0;
+    public static final int kFlywheelButton = 0;
   }
 
   // OI
   private final Joystick m_joystick = new Joystick(Config.kJoystickPort);
-
+  private final JoystickButton m_shootButton = new JoystickButton(m_joystick, Config.kShootButton);
+  private final JoystickButton m_shootOffButton = new JoystickButton(m_joystick, Config.kShootOffButton);
+  private final JoystickButton m_flywheelButton = new JoystickButton(m_joystick, Config.kFlywheelButton);
   // Subsystems
   private final Drivetrain m_drivetrain = new Drivetrain();
+  private final Flywheel m_flywheel = new Flywheel();
+  private final Tower m_tower = new Tower();
+  private final Funnel m_funnel = new Funnel();
   // Commands
-  private final ArcadeDrive m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
-  private final SimpleFollowPath m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
-      new ArrayList<PathSegment>(Arrays.asList(new PathSegment(0.0, 5.0), new PathSegment(0.0, -5.0))));
-  private final DiffDriveIdle m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
+  private final Command m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
+  private final Command m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
+
+  private final Command m_controlShooter = new SequentialCommandGroup(new RampFlywheel(m_flywheel),
+      new ControlHopper(m_tower, m_funnel, m_shootButton, m_shootOffButton), new RampDownFlywheel(m_flywheel));
+
+  private final Command m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
+      Arrays.asList(new PathSegment(0.0, 5.0), new PathSegment(0.0, -5.0)));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -59,6 +80,7 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    m_flywheelButton.whenPressed(m_controlShooter);
   }
 
   /**
