@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import java.util.Arrays;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,6 +18,7 @@ import frc.robot.commands.driving.DiffDriveIdle;
 import frc.robot.commands.driving.SimpleFollowPath;
 import frc.robot.commands.driving.SimpleFollowPath.PathSegment;
 import frc.robot.commands.shooting.ControlHopper;
+import frc.robot.commands.shooting.ControlShooter;
 import frc.robot.commands.shooting.RampDownFlywheel;
 import frc.robot.commands.shooting.RampFlywheel;
 import frc.robot.subsystems.Drivetrain;
@@ -58,11 +57,11 @@ public class RobotContainer {
   private final Command m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_joystick);
   private final Command m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
 
-  private final Command m_controlShooter = new SequentialCommandGroup(new RampFlywheel(m_flywheel),
-      new ControlHopper(m_tower, m_funnel, m_shootButton, m_shootOffButton), new RampDownFlywheel(m_flywheel));
+  private final Command m_controlShooter = new ControlShooter(m_flywheel, m_tower, m_funnel, m_shootButton,
+      m_shootOffButton);
 
-  private final Command m_simpleFollowPath = new SimpleFollowPath(m_drivetrain,
-      Arrays.asList(new PathSegment(0.0, 5.0), new PathSegment(0.0, -5.0)));
+  private final Command m_simpleFollowPath = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, 5.0),
+      new PathSegment(0.0, -5.0));
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

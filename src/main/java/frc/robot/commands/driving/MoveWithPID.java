@@ -32,8 +32,6 @@ public class MoveWithPID extends CommandBase {
     m_drivetrain.resetEncoder();
 
     m_pid.setSetpoint(m_setpoint);
-
-    SmartDashboard.putBoolean("PID Running", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,7 +51,6 @@ public class MoveWithPID extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drivetrain.getDrive().stopMotor();
-    SmartDashboard.putBoolean("PID Running", false);
   }
 
   // Returns true when the command should end.
