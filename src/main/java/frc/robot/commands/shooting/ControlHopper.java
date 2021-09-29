@@ -4,6 +4,7 @@
 
 package frc.robot.commands.shooting;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.shooter.Funnel;
@@ -15,14 +16,16 @@ public class ControlHopper extends CommandBase {
 
   private final JoystickButton m_shootButton;
   private final JoystickButton m_offButton;
+  private final JoystickButton m_revButton;
 
   /** Creates a new ControlHopper. */
-  public ControlHopper(Tower tower, Funnel funnel, JoystickButton shoot, JoystickButton off) {
+  public ControlHopper(Tower tower, Funnel funnel, JoystickButton shoot, JoystickButton off, JoystickButton rev) {
     m_tower = tower;
     m_funnel = funnel;
 
     m_shootButton = shoot;
     m_offButton = off;
+    m_revButton = rev;
 
     addRequirements(tower, funnel);
   }
@@ -30,6 +33,7 @@ public class ControlHopper extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putBoolean("In Control Hopper", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,6 +42,12 @@ public class ControlHopper extends CommandBase {
     if (m_shootButton.get()) {
       m_tower.setOn();
       m_funnel.setReverse();
+      return;
+    }
+
+    if (m_revButton.get()) {
+      m_tower.setReverse();
+      m_funnel.setOn();
       return;
     }
 
@@ -50,6 +60,7 @@ public class ControlHopper extends CommandBase {
   public void end(boolean interrupted) {
     m_tower.setOff();
     m_funnel.setOff();
+    SmartDashboard.putBoolean("In Control Hopper", false);
   }
 
   // Returns true when the command should end.

@@ -4,16 +4,12 @@
 
 package frc.robot.commands.shooting;
 
-import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.Flywheel;
 
 public class RampDownFlywheel extends CommandBase {
   private final Flywheel m_flywheel;
   private final double m_targetRPM = 0.0;
-  private final double m_targetTime = Flywheel.Config.kRampDownTime;
-
-  private SlewRateLimiter m_rateLimit;
 
   /** Creates a new RampDownFlywheel. */
   public RampDownFlywheel(Flywheel flywheel) {
@@ -24,13 +20,12 @@ public class RampDownFlywheel extends CommandBase {
 
   @Override
   public void initialize() {
-    m_rateLimit = new SlewRateLimiter(-1.0 * (1 / m_targetTime), m_flywheel.getVoltage());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_flywheel.setVoltage(m_rateLimit.calculate(-1.0));
+    m_flywheel.setVoltage(m_flywheel.getVoltage() * 0.75 * -1.0);
   }
 
   @Override

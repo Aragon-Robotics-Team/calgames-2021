@@ -17,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class ControlShooter extends SequentialCommandGroup {
   /** Creates a new ControlShooter. */
   public ControlShooter(Flywheel flywheel, Tower tower, Funnel funnel, JoystickButton shootOnButton,
-      JoystickButton shootOffButton) {
+      JoystickButton shootOffButton, JoystickButton shootReverseButton) {
     Command rampFlywheel = new RampFlywheel(flywheel);
-    Command controlHopper = new ControlHopper(tower, funnel, shootOnButton, shootOffButton);
+    Command controlHopper = new ControlHopper(tower, funnel, shootOnButton, shootOffButton, shootReverseButton);
     Command rampDownFlywheel = new RampDownFlywheel(flywheel);
 
     addCommands(rampFlywheel, controlHopper, rampDownFlywheel);
