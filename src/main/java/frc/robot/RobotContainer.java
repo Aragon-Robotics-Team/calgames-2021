@@ -100,7 +100,6 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // m_flywheelButton.whenPressed(m_controlShooter);
     m_armDownButton.whenPressed(new ArmDown(m_arm));
     m_armUpButton.whenPressed(new ArmUp(m_arm));
     m_flywheelButton.whenPressed(m_controlShooter);
