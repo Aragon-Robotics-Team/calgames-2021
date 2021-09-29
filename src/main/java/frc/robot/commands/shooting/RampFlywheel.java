@@ -42,6 +42,6 @@ public class RampFlywheel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_flywheel.getRPM() - m_targetRPM) >= 4000;
+    return Math.abs(m_flywheel.getRPM() - m_targetRPM) <= 25.0;
   }
 }

@@ -31,6 +31,11 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         m_robotContainer = new RobotContainer();
+        Command initCommand = m_robotContainer.getInitCommand();
+
+        if (initCommand != null) {
+            initCommand.schedule();
+        }
     }
 
     /**
@@ -59,6 +64,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        Command disabledCommand = m_robotContainer.getDisabledCommand();
+        if (disabledCommand != null) {
+            disabledCommand.schedule();
+        }
     }
 
     @Override

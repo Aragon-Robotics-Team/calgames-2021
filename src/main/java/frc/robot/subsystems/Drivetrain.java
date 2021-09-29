@@ -26,16 +26,16 @@ public class Drivetrain extends SubsystemBase {
     public static final double kFeetPerRotation = 0.5 * Math.PI;
     public static final double kPulsesPerRotation = 128.0;
 
-    public static final double kDegsPerTick = 56.0 / Math.PI;
+    public static final double kDegsPerTick = 360.0 / 42.0;
     public static final double kGearRatio = 1.0 / 10.0;
 
     public static final double kP = 0.5;
     public static final double kI = 1e-1;
     public static final double kD = 1e-1;
 
-    public static final double kPTurn = 0.5;
-    public static final double kITurn = 5e-5;
-    public static final double kDTurn = 0.0;
+    public static final double kPTurn = 0.8;
+    public static final double kITurn = 1e-1;
+    public static final double kDTurn = 1e-1;
   }
 
   private CANSparkMax m_leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
