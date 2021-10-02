@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.driving.ArcadeDrive;
 import frc.robot.commands.driving.DiffDriveIdle;
@@ -50,6 +51,7 @@ public class RobotContainer {
     public static final int kRollersOnButton = 5;
     public static final int kRollersOffButton = 6;
     public static final int kShootReverseButton = 1;
+    public static final int kMoveFromTargetButton = 7;
   }
 
   // OI
@@ -64,6 +66,8 @@ public class RobotContainer {
   private final JoystickButton m_rollerOffButton = new JoystickButton(m_driverJoystick, Config.kRollersOffButton);
   private final JoystickButton m_shooterReverseButton = new JoystickButton(m_shooterJoystick,
       Config.kShootReverseButton);
+  private final JoystickButton m_moveFromTargetButton = new JoystickButton(m_driverJoystick,
+      Config.kMoveFromTargetButton);
   // Subsystems
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Flywheel m_flywheel = new Flywheel();
@@ -78,8 +82,10 @@ public class RobotContainer {
   private final Command m_controlShooter = new ControlShooter(m_flywheel, m_tower, m_funnel, m_shootButton,
       m_shootOffButton, m_shooterReverseButton);
 
-  private final Command m_simpleFollowPath = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, 5.0),
-      new PathSegment(180.0, 5.0));
+  private final Command m_simpleFollowPath = new SimpleFollowPath(m_drivetrain, new PathSegment(90.0, 4.0),
+      new PathSegment(90.0, 4.0), new PathSegment(90.0, 4.0), new PathSegment(90.0, 4.0));
+
+  private final Command m_moveAwayFromTarget = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, -8.0));
 
   // Compressor for the arm
   private final Compressor m_compressor = new Compressor(Arm.Config.kPCMId);
@@ -105,6 +111,8 @@ public class RobotContainer {
     m_flywheelButton.whenPressed(m_controlShooter);
     m_rollerOnButton.whenPressed(new RollIntake(m_rollers));
     m_rollerOffButton.whenPressed(new StopIntake(m_rollers));
+    m_moveFromTargetButton.whenPressed(new SequentialCommandGroup(new InstantCommand(() -> m_drivetrain.setBrakeMode()),
+        m_moveAwayFromTarget, new InstantCommand(() -> m_drivetrain.setCoastMode())));
   }
 
   /**
@@ -148,14 +156,5 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(m_diffDriveIdle);
 
     return m_simpleFollowPath;
-  }
-
-  /**
-   * Use this to access the joystick device
-   * 
-   * @return the Joystick instance
-   */
-  public Joystick getJoystick() {
-    return m_driverJoystick;
   }
 }

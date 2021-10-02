@@ -34,8 +34,8 @@ public class Drivetrain extends SubsystemBase {
     public static final double kD = 1e-1;
 
     public static final double kPTurn = 0.8;
-    public static final double kITurn = 1e-1;
-    public static final double kDTurn = 1e-1;
+    public static final double kITurn = 1e-5;
+    public static final double kDTurn = 1e-5;
   }
 
   private CANSparkMax m_leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
