@@ -25,6 +25,7 @@ import frc.robot.commands.intake.RollIntake;
 import frc.robot.commands.intake.StopIntake;
 import frc.robot.commands.shooting.ControlShooter;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.intake.Arm;
 import frc.robot.subsystems.intake.Rollers;
 import frc.robot.subsystems.shooter.Flywheel;
@@ -75,6 +76,7 @@ public class RobotContainer {
   private final Funnel m_funnel = new Funnel();
   private final Arm m_arm = new Arm();
   private final Rollers m_rollers = new Rollers();
+  private final Limelight m_limelight = new Limelight();
   // Commands
   private final Command m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_driverJoystick);
   private final Command m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
