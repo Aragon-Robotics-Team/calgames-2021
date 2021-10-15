@@ -16,7 +16,7 @@ public class Limelight extends SubsystemBase {
 
     public static final double kTargetHeight = 8.0;
     public static final double kMountingHeight = 2.083;
-    public static final double kMountingAngle = 45.0;
+    public static final double kMountingAngle = 20;
   }
 
   private NetworkTable m_table = NetworkTableInstance.getDefault().getTable("limelight");
