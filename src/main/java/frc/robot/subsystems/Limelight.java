@@ -27,7 +27,7 @@ public class Limelight extends SubsystemBase {
 
   /** Creates a new Limelight. */
   public Limelight() {
-    m_table.getEntry("pipeline").setDouble(1);
+    m_table.getEntry("pipeline").setDouble(0);
   }
 
   public double getTv() {
@@ -47,7 +47,11 @@ public class Limelight extends SubsystemBase {
   }
 
   public double calcDistance() {
-    return (Config.kTargetHeight - Config.kMountingHeight) / Math.tan(Math.toRadians(Config.kMountingAngle + getTy()));
+    if (getTv() == 1.0) {
+      return (Config.kTargetHeight - Config.kMountingHeight)
+          / Math.tan(Math.toRadians(Config.kMountingAngle + getTy()));
+    }
+    return 0.0;
   }
 
   @Override
@@ -56,5 +60,6 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putNumber("Limelight tx", getTx());
     SmartDashboard.putNumber("Limelight ty", getTy());
     SmartDashboard.putNumber("Limelight ta", getTa());
+    SmartDashboard.putNumber("Limelight Distance", calcDistance());
   }
 }
