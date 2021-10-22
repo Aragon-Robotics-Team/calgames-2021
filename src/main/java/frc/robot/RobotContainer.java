@@ -24,6 +24,8 @@ import frc.robot.commands.intake.ArmUp;
 import frc.robot.commands.intake.RollIntake;
 import frc.robot.commands.intake.StopIntake;
 import frc.robot.commands.shooting.ControlShooter;
+import frc.robot.commands.shooting.FindTarget;
+import frc.robot.commands.shooting.TurnTowardTarget;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.intake.Arm;
@@ -88,6 +90,9 @@ public class RobotContainer {
       new PathSegment(90.0, 4.0), new PathSegment(90.0, 4.0), new PathSegment(90.0, 4.0));
 
   private final Command m_moveAwayFromTarget = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, -8.0));
+
+  private final Command m_findTarget = new SequentialCommandGroup(new FindTarget(m_limelight, m_drivetrain),
+      new TurnTowardTarget(m_limelight, m_drivetrain));
 
   // Compressor for the arm
   private final Compressor m_compressor = new Compressor(Arm.Config.kPCMId);
@@ -157,6 +162,6 @@ public class RobotContainer {
     m_drivetrain.setBrakeMode();
     m_drivetrain.setDefaultCommand(m_diffDriveIdle);
 
-    return m_simpleFollowPath;
+    return m_findTarget;
   }
 }
