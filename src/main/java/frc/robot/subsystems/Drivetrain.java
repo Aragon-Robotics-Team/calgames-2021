@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drivetrain extends SubsystemBase {
   public static final class Config {
-    public static final int kLeftMotorMaster = 8;
-    public static final int kRightMotorMaster = 5;
+    public static final int kLeftMotorMaster = 1;
+    public static final int kRightMotorMaster = 2;
     // public static final int kLeftMotorSlave = 1;
     // public static final int kRightMotorSlave = 2;
 
@@ -49,6 +49,9 @@ public class Drivetrain extends SubsystemBase {
 
   private CANEncoder m_encoder = m_rightMotorMaster.getEncoder();
 
+  private CANEncoder m_encRight = m_rightMotorMaster.getEncoder();
+  private CANEncoder m_encLeft = m_leftMotorMaster.getEncoder();
+
   public enum EncoderCalculationType {
     Lateral, Turn
   }
@@ -56,14 +59,16 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     // Set masters to inverted
-    m_leftMotorMaster.setInverted(true);
+    m_leftMotorMaster.setInverted(false);
     m_rightMotorMaster.setInverted(true);
     // Enable following
     // m_leftMotorSlave.follow(m_leftMotorMaster);
     // m_rightMotorSlave.follow(m_rightMotorMaster);
 
     // Set encoder distance constant
-    setEncoderState(EncoderCalculationType.Lateral);
+    // setEncoderState(EncoderCalculationType.Lateral);
+    m_encLeft.setPositionConversionFactor(1.0);
+    m_encRight.setPositionConversionFactor(1.0);
   }
 
   /**
@@ -132,13 +137,15 @@ public class Drivetrain extends SubsystemBase {
    * Resets the encoder value
    */
   public void resetEncoder() {
-    m_encoder.setPosition(0);
+    m_encLeft.setPosition(0);
+    m_encRight.setPosition(0);
   }
 
   @Override
   public void periodic() {
     super.periodic();
 
-    SmartDashboard.putNumber("Drivetrain Encoder", getDistance());
+    SmartDashboard.putNumber("Drivetrain Left", m_encLeft.getPosition());
+    SmartDashboard.putNumber("Drivetrain Right", m_encRight.getPosition());
   }
 }
