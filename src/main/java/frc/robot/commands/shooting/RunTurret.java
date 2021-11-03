@@ -7,9 +7,13 @@ package frc.robot.commands.shooting;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.shooter.Turret;
 
 public class RunTurret extends CommandBase {
+  public static final class Config {
+    public static final double kMaxSpeed = 0.2;
+  }
+
   private final Joystick m_joystick;
   private final Turret m_turret;
 
@@ -29,23 +33,8 @@ public class RunTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // int direction = m_joystick.getPOV(0);
-
     double rawTurn = -m_joystick.getRawAxis(2);
-    System.out.println(rawTurn);
-    m_turret.setMotor(MathUtil.clamp(rawTurn, -0.2, 0.2));
-    return;
-    // double turn = Math.abs(rawTurn) < 0.2 ? 0.0 : rawTurn;
-
-    // if (turn > 0) {
-    // System.out.println("moving right");
-    // // m_turret.runMotor(Direction.Right);
-    // } else if (turn < 0) {
-    // System.out.println("moving left");
-    // m_turret.runMotor(Direction.Left);
-    // } else {
-    // m_turret.motorOff();
-    // }
+    m_turret.setMotor(MathUtil.clamp(rawTurn, -Config.kMaxSpeed, Config.kMaxSpeed));
   }
 
   // Called once the command ends or is interrupted.
