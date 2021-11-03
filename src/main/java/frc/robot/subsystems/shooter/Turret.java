@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -15,8 +15,11 @@ public class Turret extends SubsystemBase {
     public static final int kMotorPort = 4;
     public static final double kDegsPerTick = 90.0 / 6900.0;
     public static final double kSpeed = 0.25;
+    public static final double kLeftBound = -90.0;
+    public static final double kRightBound = 90.0;
   }
 
+  // TODO: experiment with inverting motor
   private final TalonSRX m_motor = new TalonSRX(Config.kMotorPort);
 
   public enum TurretState {
@@ -25,9 +28,9 @@ public class Turret extends SubsystemBase {
 
   private TurretState getTurretState() {
     double degs = m_motor.getSelectedSensorPosition() * Config.kDegsPerTick;
-    if (degs >= 90.0) {
+    if (degs >= Config.kRightBound) {
       return TurretState.OverRight;
-    } else if (degs <= -90.0) {
+    } else if (degs <= Config.kLeftBound) {
       return TurretState.OverLeft;
     }
     return TurretState.Normal;
