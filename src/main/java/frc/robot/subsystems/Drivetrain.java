@@ -17,8 +17,6 @@ public class Drivetrain extends SubsystemBase {
   public static final class Config {
     public static final int kLeftMotorMaster = 1;
     public static final int kRightMotorMaster = 2;
-    // public static final int kLeftMotorSlave = 1;
-    // public static final int kRightMotorSlave = 2;
 
     public static final int kEncoderChanA = 0;
     public static final int kEncoderChanB = 1;
@@ -40,14 +38,8 @@ public class Drivetrain extends SubsystemBase {
 
   private CANSparkMax m_leftMotorMaster = new CANSparkMax(Config.kLeftMotorMaster, MotorType.kBrushless);
   private CANSparkMax m_rightMotorMaster = new CANSparkMax(Config.kRightMotorMaster, MotorType.kBrushless);
-  // private CANSparkMax m_leftMotorSlave = new
-  // CANSparkMax(Config.kLeftMotorSlave, MotorType.kBrushless);
-  // private CANSparkMax m_rightMotorSlave = new
-  // CANSparkMax(Config.kRightMotorSlave, MotorType.kBrushless);
 
   private DifferentialDrive m_drive = new DifferentialDrive(m_leftMotorMaster, m_rightMotorMaster);
-
-  private CANEncoder m_encoder = m_rightMotorMaster.getEncoder();
 
   private CANEncoder m_encRight = m_rightMotorMaster.getEncoder();
   private CANEncoder m_encLeft = m_leftMotorMaster.getEncoder();
@@ -59,14 +51,10 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     // Set masters to inverted
-    m_leftMotorMaster.setInverted(false);
+    m_leftMotorMaster.setInverted(true);
     m_rightMotorMaster.setInverted(true);
-    // Enable following
-    // m_leftMotorSlave.follow(m_leftMotorMaster);
-    // m_rightMotorSlave.follow(m_rightMotorMaster);
 
     // Set encoder distance constant
-    // setEncoderState(EncoderCalculationType.Lateral);
     m_encLeft.setPositionConversionFactor(1.0);
     m_encRight.setPositionConversionFactor(1.0);
   }
@@ -101,9 +89,7 @@ public class Drivetrain extends SubsystemBase {
    */
   private void setMotorMode(IdleMode mode) {
     m_leftMotorMaster.setIdleMode(mode);
-    // m_leftMotorSlave.setIdleMode(mode);
     m_rightMotorMaster.setIdleMode(mode);
-    // m_rightMotorSlave.setIdleMode(mode);
   }
 
   /**
@@ -113,7 +99,7 @@ public class Drivetrain extends SubsystemBase {
    *         setEncoderState (default is lateral)
    */
   public double getDistance() {
-    return m_encoder.getPosition();
+    return m_encRight.getPosition();
   }
 
   /**
@@ -125,10 +111,12 @@ public class Drivetrain extends SubsystemBase {
   public void setEncoderState(EncoderCalculationType e) {
     switch (e) {
       case Lateral:
-        m_encoder.setPositionConversionFactor(Config.kGearRatio * Config.kFeetPerRotation);
+        m_encLeft.setPositionConversionFactor(Config.kGearRatio * Config.kFeetPerRotation);
+        m_encRight.setPositionConversionFactor(Config.kGearRatio * Config.kFeetPerRotation);
         break;
       case Turn:
-        m_encoder.setPositionConversionFactor(Config.kDegsPerTick);
+        m_encLeft.setPositionConversionFactor(Config.kDegsPerTick);
+        m_encRight.setPositionConversionFactor(Config.kDegsPerTick);
         break;
     }
   }

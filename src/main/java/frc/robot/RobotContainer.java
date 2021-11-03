@@ -25,9 +25,11 @@ import frc.robot.commands.intake.RollIntake;
 import frc.robot.commands.intake.StopIntake;
 import frc.robot.commands.shooting.ControlShooter;
 import frc.robot.commands.shooting.FindTarget;
+import frc.robot.commands.shooting.RunTurret;
 import frc.robot.commands.shooting.TurnTowardTarget;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.intake.Arm;
 import frc.robot.subsystems.intake.Rollers;
 import frc.robot.subsystems.shooter.Flywheel;
@@ -79,6 +81,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Rollers m_rollers = new Rollers();
   private final Limelight m_limelight = new Limelight();
+  private final Turret m_turret = new Turret();
   // Commands
   private final Command m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_driverJoystick);
   private final Command m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
@@ -86,13 +89,12 @@ public class RobotContainer {
   private final Command m_controlShooter = new ControlShooter(m_flywheel, m_tower, m_funnel, m_shootButton,
       m_shootOffButton, m_shooterReverseButton);
 
-  private final Command m_simpleFollowPath = new SimpleFollowPath(m_drivetrain, new PathSegment(90.0, 4.0),
-      new PathSegment(90.0, 4.0), new PathSegment(90.0, 4.0), new PathSegment(90.0, 4.0));
-
   private final Command m_moveAwayFromTarget = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, -8.0));
 
   private final Command m_findTarget = new SequentialCommandGroup(new FindTarget(m_limelight, m_drivetrain),
       new TurnTowardTarget(m_limelight, m_drivetrain));
+
+  private final Command m_runTurret = new RunTurret(m_shooterJoystick, m_turret);
 
   // Compressor for the arm
   private final Compressor m_compressor = new Compressor(Arm.Config.kPCMId);
@@ -149,6 +151,8 @@ public class RobotContainer {
     m_drivetrain.resetEncoder();
     m_drivetrain.setCoastMode();
     m_drivetrain.setDefaultCommand(m_arcadeDrive);
+    m_turret.resetEncoder();
+    m_turret.setDefaultCommand(m_runTurret);
 
     return m_arcadeDrive;
   }
