@@ -92,7 +92,7 @@ public class RobotContainer {
   private final Command m_moveAwayFromTarget = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, -8.0));
 
   private final Command m_findTarget = new SequentialCommandGroup(new FindTarget(m_limelight, m_drivetrain),
-      new TurnTowardTarget(m_limelight, m_drivetrain));
+      new TurnTowardTarget(m_limelight, m_turret));
 
   private final Command m_runTurret = new RunTurret(m_shooterJoystick, m_turret);
 
@@ -166,6 +166,6 @@ public class RobotContainer {
     m_drivetrain.setBrakeMode();
     m_drivetrain.setDefaultCommand(m_diffDriveIdle);
 
-    return m_findTarget;
+    return new TurnTowardTarget(m_limelight, m_turret);
   }
 }
