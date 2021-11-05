@@ -19,8 +19,10 @@ public class Turret extends SubsystemBase {
     public static final double kRightBound = 90.0;
   }
 
-  // TODO: experiment with inverting motor
   private final TalonSRX m_motor = new TalonSRX(Config.kMotorPort);
+
+  public Turret() {
+  }
 
   public enum TurretState {
     OverLeft, OverRight, Normal
@@ -40,10 +42,6 @@ public class Turret extends SubsystemBase {
     TurretState state = getTurretState();
 
     /**
-     * In order to turn the turret clockwise (right), we have to give a negative
-     * percent output, and for counterclockwise we have to give a positive percent
-     * output, which is counterintuitive.
-     * 
      * Normal: Turret is within "legal" bounds of movement. OverRight: Turret is
      * over +90deg. OverLeft: Turret is under -90deg.
      * 
@@ -69,6 +67,6 @@ public class Turret extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Turret Encoder", m_motor.getSelectedSensorPosition() * Config.kDegsPerTick);
-    SmartDashboard.putString("Turret state", getTurretState().name());
+    SmartDashboard.putString("Turret State", getTurretState().name());
   }
 }

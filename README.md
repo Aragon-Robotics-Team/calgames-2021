@@ -24,6 +24,14 @@ Robot code for calgames.
 | RT           | Run hopper         |
 | X            | Reverse hopper     |
 
+## Limelight Network Tables Values
+| Value | Meaning                                                                      |
+| ----- | ---------------------------------------------------------------------------- |
+| tv    | Whether the limelight has any valid targets (0 or 1)                         |
+| tx    | Horizontal Offset From Crosshair To Target (LL1: -27 degrees to 27 degrees   | LL2: -29.8 to 29.8 |       | degrees | ) |
+| ty    | Vertical Offset From Crosshair To Target (LL1: -20.5 degrees to 20.5 degrees | LL2: -24.85 to     | 24.85 | degrees | ) |
+| ta    | Target Area (0% of image to 100% of image)                                   |
+
 ## Authors:
 
 - Satvik Reddy
