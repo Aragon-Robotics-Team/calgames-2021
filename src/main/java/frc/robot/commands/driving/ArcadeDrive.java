@@ -19,9 +19,24 @@ public class ArcadeDrive extends CommandBase {
   private final Drivetrain m_drivetrain;
   private final Joystick m_joystick;
 
+  private final double m_speedMult, m_turnMult;
+
   public ArcadeDrive(Drivetrain drivetrain, Joystick joystick) {
     m_drivetrain = drivetrain;
     m_joystick = joystick;
+
+    m_speedMult = Config.kSpeedMult;
+    m_turnMult = Config.kTurnMult;
+
+    addRequirements(drivetrain);
+  }
+
+  public ArcadeDrive(Drivetrain drivetrain, Joystick joystick, double speedMult, double turnMult) {
+    m_drivetrain = drivetrain;
+    m_joystick = joystick;
+
+    m_speedMult = speedMult;
+    m_turnMult = turnMult;
 
     addRequirements(drivetrain);
   }
@@ -36,8 +51,8 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void execute() {
 
-    double speed = m_joystick.getRawAxis(Config.kLeftStickX) * Config.kSpeedMult;
-    double turn = m_joystick.getRawAxis(Config.kRightStickX) * Config.kTurnMult;
+    double speed = m_joystick.getRawAxis(Config.kLeftStickX) * m_speedMult;
+    double turn = m_joystick.getRawAxis(Config.kRightStickX) * m_turnMult;
 
     m_drivetrain.getDrive().arcadeDrive(speed, turn);
   }

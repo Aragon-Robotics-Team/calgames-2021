@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.driving.ArcadeDrive;
 import frc.robot.commands.driving.DiffDriveIdle;
-import frc.robot.commands.driving.SimpleFollowPath;
-import frc.robot.commands.driving.SimpleFollowPath.PathSegment;
 import frc.robot.commands.intake.ArmDown;
 import frc.robot.commands.intake.ArmUp;
 import frc.robot.commands.intake.RollIntake;
@@ -33,6 +32,7 @@ import frc.robot.subsystems.intake.Arm;
 import frc.robot.subsystems.intake.Rollers;
 import frc.robot.subsystems.shooter.Flywheel;
 import frc.robot.subsystems.shooter.Funnel;
+import frc.robot.subsystems.shooter.Hood;
 import frc.robot.subsystems.shooter.Tower;
 import frc.robot.subsystems.shooter.Turret;
 
@@ -47,6 +47,7 @@ public class RobotContainer {
   public static final class Config {
     public static final int kJoystickDriverPort = 4;
     public static final int kJoystickShooterPort = 5;
+    public static final int kJoystickSafePort = 3;
 
     public static final int kShootButton = 8;
     public static final int kShootOffButton = 4;
@@ -57,11 +58,15 @@ public class RobotContainer {
     public static final int kRollersOffButton = 6;
     public static final int kShootReverseButton = 1;
     public static final int kMoveFromTargetButton = 7;
+    public static final int kHoodDownButton = 7;
+    public static final int kHoodUpButton = 5;
   }
 
   // OI
   private final Joystick m_driverJoystick = new Joystick(Config.kJoystickDriverPort);
   private final Joystick m_shooterJoystick = new Joystick(Config.kJoystickShooterPort);
+  private final Joystick m_safeJoystick = new Joystick(Config.kJoystickSafePort);
+
   private final JoystickButton m_shootButton = new JoystickButton(m_shooterJoystick, Config.kShootButton);
   private final JoystickButton m_shootOffButton = new JoystickButton(m_shooterJoystick, Config.kShootOffButton);
   private final JoystickButton m_flywheelButton = new JoystickButton(m_shooterJoystick, Config.kFlywheelButton);
@@ -71,8 +76,8 @@ public class RobotContainer {
   private final JoystickButton m_rollerOffButton = new JoystickButton(m_driverJoystick, Config.kRollersOffButton);
   private final JoystickButton m_shooterReverseButton = new JoystickButton(m_shooterJoystick,
       Config.kShootReverseButton);
-  private final JoystickButton m_moveFromTargetButton = new JoystickButton(m_driverJoystick,
-      Config.kMoveFromTargetButton);
+  private final JoystickButton m_hoodDownButton = new JoystickButton(m_shooterJoystick, Config.kHoodDownButton);
+  private final JoystickButton m_hoodUpButton = new JoystickButton(m_shooterJoystick, Config.kHoodUpButton);
   // Subsystems
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Flywheel m_flywheel = new Flywheel();
@@ -82,14 +87,14 @@ public class RobotContainer {
   private final Rollers m_rollers = new Rollers();
   private final Limelight m_limelight = new Limelight();
   private final Turret m_turret = new Turret();
+  private final Hood m_hood = new Hood();
   // Commands
   private final Command m_arcadeDrive = new ArcadeDrive(m_drivetrain, m_driverJoystick);
+  private final Command m_safeArcadeDrive = new ArcadeDrive(m_drivetrain, m_safeJoystick, 0.5, 0.7);
   private final Command m_diffDriveIdle = new DiffDriveIdle(m_drivetrain);
 
   private final Command m_controlShooter = new ControlShooter(m_flywheel, m_tower, m_funnel, m_shootButton,
       m_shootOffButton, m_shooterReverseButton);
-
-  private final Command m_moveAwayFromTarget = new SimpleFollowPath(m_drivetrain, new PathSegment(0.0, -8.0));
 
   private final Command m_findTarget = new SequentialCommandGroup(new FindTarget(m_limelight, m_drivetrain),
       new TurnTowardTarget(m_limelight, m_turret));
@@ -120,8 +125,8 @@ public class RobotContainer {
     m_flywheelButton.whenPressed(m_controlShooter);
     m_rollerOnButton.whenPressed(new RollIntake(m_rollers));
     m_rollerOffButton.whenPressed(new StopIntake(m_rollers));
-    m_moveFromTargetButton.whenPressed(new SequentialCommandGroup(new InstantCommand(() -> m_drivetrain.setBrakeMode()),
-        m_moveAwayFromTarget, new InstantCommand(() -> m_drivetrain.setCoastMode())));
+    m_hoodDownButton.whenPressed(new InstantCommand(() -> m_hood.hoodDown(), m_hood));
+    m_hoodUpButton.whenPressed(new InstantCommand(() -> m_hood.hoodUp(), m_hood));
   }
 
   /**
@@ -130,6 +135,7 @@ public class RobotContainer {
    * @return the init comand
    */
   public Command getInitCommand() {
+    SmartDashboard.putBoolean("Safe mode", false);
     return new InstantCommand(() -> m_compressor.start(), m_arm);
   }
 
@@ -150,11 +156,17 @@ public class RobotContainer {
   public Command getTeleopCommand() {
     m_drivetrain.resetEncoder();
     m_drivetrain.setCoastMode();
-    m_drivetrain.setDefaultCommand(m_arcadeDrive);
+
+    boolean safeMode = SmartDashboard.getBoolean("Safe mode", false);
+    if (safeMode)
+      m_drivetrain.setDefaultCommand(m_safeArcadeDrive);
+    else
+      m_drivetrain.setDefaultCommand(m_arcadeDrive);
+
     m_turret.resetEncoder();
     m_turret.setDefaultCommand(m_runTurret);
 
-    return m_arcadeDrive;
+    return null;
   }
 
   /**
