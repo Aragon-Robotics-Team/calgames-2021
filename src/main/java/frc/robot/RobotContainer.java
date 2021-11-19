@@ -136,6 +136,7 @@ public class RobotContainer {
    */
   public Command getInitCommand() {
     SmartDashboard.putBoolean("Safe mode", false);
+    SmartDashboard.putNumber("Target RPM", 4000.0);
     return new InstantCommand(() -> m_compressor.start(), m_arm);
   }
 

@@ -4,11 +4,13 @@
 
 package frc.robot.commands.shooting;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.Flywheel;
 
 public class RegulateRPM extends CommandBase {
   private final Flywheel m_flywheel;
+  private double m_targetRPM;
 
   /** Creates a new RegulateRPM. */
   public RegulateRPM(Flywheel flywheel) {
@@ -20,16 +22,19 @@ public class RegulateRPM extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_targetRPM = SmartDashboard.getNumber("Target RPM", 4000.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(m_flywheel.getRPM() - Flywheel.Config.kTargetRPM) >= 200) {
-      if (m_flywheel.getRPM() > Flywheel.Config.kTargetRPM) {
-        m_flywheel.setVoltage(m_flywheel.getVoltage() * -0.9);
+    double v = m_flywheel.getPercent();
+    double difference = Math.abs(m_targetRPM - m_flywheel.getRPM());
+    if (difference >= 200) {
+      if (m_flywheel.getRPM() > m_targetRPM) {
+        m_flywheel.set(v - ((difference) / 2000 / 100));
       } else {
-        m_flywheel.setVoltage(m_flywheel.getVoltage() * 1.0005);
+        m_flywheel.set(v + ((difference)) / 1000 / 100);
       }
     }
   }
