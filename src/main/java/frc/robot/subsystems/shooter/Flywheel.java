@@ -19,9 +19,7 @@ public class Flywheel extends SubsystemBase {
     public static final double kGearRatio = 1.0;
     public static final double kEncoderRes = 4096.0;
 
-    public static final double kTargetRPM = 4000.0;
-    public static final double kRampUpTime = 5.0; // seconds
-    public static final double kRampDownTime = 5.0; // seconds
+    public static final double kTargetRPM = 4250.0;
   }
 
   private final TalonSRX m_flyMotorMaster = new TalonSRX(Config.kFlyMotorPortMaster);
@@ -38,20 +36,20 @@ public class Flywheel extends SubsystemBase {
     m_flyMotorSlave.follow(m_flyMotorMaster);
   }
 
-  public void setVoltage(double voltage) {
-    m_flyMotorMaster.set(TalonSRXControlMode.PercentOutput, voltage);
-  }
-
   public void setOff() {
-    setVoltage(0);
+    set(0.0);
   }
 
   public double getRPM() {
     return -1.0 * m_flyMotorMaster.getSelectedSensorVelocity() * 5.0 * Config.kGearRatio / Config.kEncoderRes * 60;
   }
 
-  public double getVoltage() {
-    return m_flyMotorMaster.getMotorOutputVoltage();
+  public double getPercent() {
+    return m_flyMotorMaster.getMotorOutputPercent();
+  }
+
+  public void set(double v) {
+    m_flyMotorMaster.set(TalonSRXControlMode.PercentOutput, v);
   }
 
   @Override

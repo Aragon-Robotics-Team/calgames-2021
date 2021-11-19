@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.driving.ArcadeDrive;
 import frc.robot.commands.driving.DiffDriveIdle;
@@ -23,7 +22,6 @@ import frc.robot.commands.intake.ArmUp;
 import frc.robot.commands.intake.RollIntake;
 import frc.robot.commands.intake.StopIntake;
 import frc.robot.commands.shooting.ControlShooter;
-import frc.robot.commands.shooting.FindTarget;
 import frc.robot.commands.shooting.RunTurret;
 import frc.robot.commands.shooting.TurnTowardTarget;
 import frc.robot.subsystems.Drivetrain;
@@ -96,9 +94,6 @@ public class RobotContainer {
   private final Command m_controlShooter = new ControlShooter(m_flywheel, m_tower, m_funnel, m_shootButton,
       m_shootOffButton, m_shooterReverseButton);
 
-  private final Command m_findTarget = new SequentialCommandGroup(new FindTarget(m_limelight, m_drivetrain),
-      new TurnTowardTarget(m_limelight, m_turret));
-
   private final Command m_runTurret = new RunTurret(m_shooterJoystick, m_turret);
 
   // Compressor for the arm
@@ -136,6 +131,8 @@ public class RobotContainer {
    */
   public Command getInitCommand() {
     SmartDashboard.putBoolean("Safe mode", false);
+    SmartDashboard.putNumber("Target RPM", Flywheel.Config.kTargetRPM);
+
     return new InstantCommand(() -> m_compressor.start(), m_arm);
   }
 
