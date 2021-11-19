@@ -8,8 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.Flywheel;
 
 public class RampDownFlywheel extends CommandBase {
+  public static final class Config {
+    public static final double kP = 0.25;
+  }
+
   private final Flywheel m_flywheel;
-  private final double m_targetRPM = 0.0;
 
   /** Creates a new RampDownFlywheel. */
   public RampDownFlywheel(Flywheel flywheel) {
@@ -25,7 +28,8 @@ public class RampDownFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_flywheel.setVoltage(m_flywheel.getVoltage() * 0.25 * -1.0);
+    double error = -m_flywheel.getRPM();
+    m_flywheel.set(m_flywheel.getPercent() + (error * Config.kP));
   }
 
   @Override
@@ -36,7 +40,7 @@ public class RampDownFlywheel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // 100 RPM tolerance (turn off immediately once 100 rpm has been reached)
-    return Math.abs(m_flywheel.getRPM() - m_targetRPM) <= 100;
+    return m_flywheel.getRPM() <= 100.0; // At this point, flywheel is running slow enough that it is safe to turn off
+                                         // immediately.
   }
 }

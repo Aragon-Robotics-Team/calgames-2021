@@ -4,12 +4,16 @@
 
 package frc.robot.commands.shooting;
 
-import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.shooter.Flywheel;
 
 public class RampFlywheel extends CommandBase {
+  public static final class Config {
+    // This is not PID. kP was just the most logical name for the variable.
+    public static final double kP = 1.0e-4;
+  }
+
   private final Flywheel m_flywheel;
   private double m_targetRPM;
 
@@ -29,8 +33,8 @@ public class RampFlywheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double diff = m_targetRPM - m_flywheel.getRPM();
-    m_flywheel.set(m_flywheel.getPercent() + (diff / 100 / 100));
+    double error = m_targetRPM - m_flywheel.getRPM();
+    m_flywheel.set(m_flywheel.getPercent() + (error * Config.kP));
   }
 
   // Called once the command ends or is interrupted.
