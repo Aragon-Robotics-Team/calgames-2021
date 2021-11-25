@@ -11,7 +11,7 @@ import frc.robot.subsystems.shooter.Flywheel;
 public class RampFlywheel extends CommandBase {
   public static final class Config {
     // This is not PID. kP was just the most logical name for the variable.
-    public static final double kP = 1.0e-4;
+    public static final double kP = 2.0e-5;
   }
 
   private final Flywheel m_flywheel;

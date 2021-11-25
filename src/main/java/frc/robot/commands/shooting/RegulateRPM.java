@@ -11,8 +11,8 @@ import frc.robot.subsystems.shooter.Flywheel;
 public class RegulateRPM extends CommandBase {
   public static class Config {
     // Not PID, kP is just the most logical name.
-    public static final double kP = 5.0e-6;
-    public static final double kTolerance = 50.0; // Don't regulate under this number.
+    public static final double kP = 2.0e-6;
+    public static final double kTolerance = 0.0; // Don't regulate under this number.
   }
 
   private final Flywheel m_flywheel;
