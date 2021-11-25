@@ -4,6 +4,7 @@
 
 package frc.robot.commands.shooting;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
@@ -19,6 +20,8 @@ public class TurnTowardTarget extends CommandBase {
   private final Limelight m_limelight;
   private final Turret m_turret;
 
+  private final PIDController m_pid = new PIDController(1.0e-2, 1.0e-4, 1.0e-4);
+
   /** Creates a new TurnTowardTarget. */
   public TurnTowardTarget(Limelight limelight, Turret turret) {
     m_limelight = limelight;
@@ -30,6 +33,7 @@ public class TurnTowardTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_pid.setSetpoint(0.0);
     SmartDashboard.putBoolean("Turning Toward Target", true);
   }
 
@@ -38,12 +42,7 @@ public class TurnTowardTarget extends CommandBase {
   public void execute() {
     double angle = m_limelight.getTx();
 
-    double curbedSpeed = (Math.abs(angle) / 27) * Config.kMoveSpeed;
-    if (angle < Config.kTargetAngle) {
-      m_turret.setMotor(curbedSpeed);
-    } else {
-      m_turret.setMotor(-curbedSpeed);
-    }
+    m_turret.setMotor(m_pid.calculate(angle));
   }
 
   // Called once the command ends or is interrupted.
