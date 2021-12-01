@@ -6,7 +6,6 @@ package frc.robot.commands.shooting;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.shooter.Flywheel;
@@ -25,8 +24,8 @@ public class ControlShooter extends SequentialCommandGroup {
     Command regulateRPM = new RegulateRPM(flywheel);
     Command rampDownFlywheel = new RampDownFlywheel(flywheel);
 
-    addCommands(new ParallelDeadlineGroup(new WaitForButton(shootOffButton), rampFlywheel, controlHopper, regulateRPM),
-        rampDownFlywheel);
+    addCommands(new ParallelDeadlineGroup(new WaitForButton(shootOffButton),
+        new SequentialCommandGroup(rampFlywheel, controlHopper, regulateRPM)), rampDownFlywheel);
   }
 
 }
